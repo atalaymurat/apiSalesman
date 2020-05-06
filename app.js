@@ -6,4 +6,18 @@ app.get('/', (req, res) => {
   res.send('Salesman Api index')
 })
 
-app.listen(port, () => console.log(`App is listening at http://localhost:${port}`))
+// logging
+switch (app.get('env')) {
+  case 'development':
+    app.use(require('morgan')('dev'))
+    break
+  case 'production':
+    app.use(require('express-logger')({ path: __dirname + '/log/requests.log' }))
+    break
+}
+
+app.listen(port, () =>
+  console.log(
+    'App started env: ' + app.get('env') + ` App is listening at http://localhost:${port}`
+  )
+)
