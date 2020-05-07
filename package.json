@@ -11,6 +11,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-logger": "0.0.3",
+    "mongoose": "^5.9.12",
     "morgan": "^1.10.0"
   }
 }
