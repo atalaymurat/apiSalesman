@@ -1,19 +1,22 @@
 const express = require('express')
+const morgan = require('morgan')
+const credentials = require('./.credentials')
+
 const app = express()
-const credentials = require('./credentials')
 
 // Mongo DB Settings
 const mongoose = require('mongoose')
 let opts = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 }
 switch (app.get('env')) {
   case 'development':
-    mongoose.connect(credentials.mongo.development.connect, opts)
+    mongoose.connect(credentials.mongo.development.url, opts)
     break
   case 'production':
-    mongoose.connect(credentials.mongo.production.connect, opts)
+    mongoose.connect(credentials.mongo.production.url, opts)
     break
   default:
     throw new Error('Unkown execution enviroment: ' + app.get('env'))
@@ -23,24 +26,28 @@ db.once('open', function () {
   console.log('Db mongo connection success')
 })
 
-// Routes
-app.get('/', (req, res) => {
-  res.send('Salesman Api index')
-})
-
-// logging
+// Log configuration
 switch (app.get('env')) {
   case 'development':
-    app.use(require('morgan')('dev'))
+    app.use(morgan('dev'));
     break
   case 'production':
     app.use(require('express-logger')({ path: __dirname + '/log/requests.log' }))
     break
 }
 
+// Middlewares
+app.use(express.json())
+
+// Routes
+app.get('/', (req, res) => {
+  res.send('Salesman Api index')
+})
+app.use('/users', require('./routes/users.js'))
+
 // 404 catch-all handler (middleware)
 app.use((req, res, next) => {
-  res.status(404).send('404')
+  res.status(404).send('404 not Found')
 })
 
 // 500 error handler (middleware)
@@ -50,7 +57,8 @@ app.use((err, req, res, next) => {
   res.send('500')
 })
 
-const port = 4000
+// Start the server
+const port = process.env.PORT || 4000
 app.listen(port, () =>
   console.log('App started in mode ' + app.get('env') + ` listening at http://localhost:${port}`)
 )
