@@ -1,8 +1,11 @@
 const express = require('express')
 const morgan = require('morgan')
 const credentials = require('./.credentials')
+const cors = require('cors')
 
 const app = express()
+// Cors middl...
+app.use(cors());
 
 // Mongo DB Settings
 const mongoose = require('mongoose')

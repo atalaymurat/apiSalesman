@@ -12,6 +12,7 @@
     "@hapi/joi": "^17.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-logger": "0.0.3",
     "express-promise-router": "^3.0.3",
@@ -20,8 +21,8 @@
     "morgan": "^1.10.0",
     "passport": "^0.4.1",
     "passport-facebook-token": "^3.3.0",
-    "passport-google-plus-token": "^2.1.0",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "passport-token-google2": "^0.1.4"
   }
 }
