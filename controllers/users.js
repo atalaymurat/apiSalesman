@@ -93,6 +93,8 @@ module.exports = {
     Merhaba, <br />
     Üye kaydınız için teşekkür ederiz. <br />
     Lütfen email adresinizin size ait olduğunu onaylamak için aşağıdaki kodu kullanınız. <br />
+    <br />
+    <hr />
     Kod : <b>${confirmStr}</b><br />
     <hr />
     Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz <br />
