@@ -8,7 +8,7 @@ const app = express()
 app.use(cookieParser());
 // Cors middl...
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: "http://dev.makinatr.com",
   credentials: true
 }));
 
