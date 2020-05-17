@@ -49,7 +49,7 @@ app.use(express.json())
 
 // Routes
 app.get('/', (req, res) => {
-  res.status(200).send('salesman api is under construction')
+  res.status(200).send('api is running')
 })
 app.use('/users', require('./routes/users.js'))
 
