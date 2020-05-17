@@ -24,7 +24,7 @@ module.exports = {
   schemas: {
     authSchema: Joi.object().keys({
       email: Joi.string().email().required().error(new Error("Email geçerli değil")),
-      password: Joi.string().required().min(6).error(new Error(" Şifre boş bırakılamaz veya en az 6 karakter içermeli")),
+      password: Joi.string().required().min(6).error(new Error("Şifre geçersiz")),
     }),
     verifySchema: Joi.object().keys({
       code: Joi.string().max(6).min(6).error(new Error("Kod doğru değil")),

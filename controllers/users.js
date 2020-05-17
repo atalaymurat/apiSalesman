@@ -3,6 +3,7 @@ const User = require('../models/user.js')
 const { JWT_SECRET } = require('../.credentials.js')
 const randomstring = require('randomstring')
 const mailer = require('../misc/mailer.js')
+const conf = require('../.credentials.js')
 
 signToken = user => {
   return JWT.sign(
@@ -99,9 +100,8 @@ module.exports = {
     <br />
 
     Saygılar <br />
-    Murat Atalay <br />
-    makinatr.com <br />
-    destek@makinatr.com <br />
+    ${conf.host_url} <br />
+    ${conf.host_email}<br />
     `
 
     // Getting the JWT access token
@@ -109,7 +109,7 @@ module.exports = {
     res.cookie('access_token', token, { httpOnly: true })
 
     //Sending the Email
-    //await mailer.sendEmail('muratatalaytr@gmail.com', email, 'Makinatr.com Doğrulama Kodu', html)
+    await mailer.sendEmail(conf.host_email, email, 'Doğrulama Kodu', html)
     console.log('[CTRL-signUp] Email sent for verify to', email)
     res.status(200).json({
       success: true,
@@ -167,23 +167,26 @@ module.exports = {
     }
   },
 
-  login: async (req, res, next) => {
-    console.log('[CTRL] login called')
-    const token = signToken(req.user)
-    res.cookie('access_token', token, {
-      httpOnly: true,
-    })
-    res.status(200).json({
-      message: 'Login Success',
-    })
-    console.log('[CTRL] Successfull Login')
-  },
+  //login: async (req, res, next) => {
+  //console.log('[CTRL] login called req : ', next)
+  //const token = signToken(req.user)
+  //res.cookie('access_token', token, {
+  //httpOnly: true,
+  //})
+  //res.status(200).json({
+  //status: 'ok',
+  //error: null,
+  //message: 'Giriş yaptınız',
+  //})
+  //console.log('[CTRL] Successfull Login')
+  //},
 
   logOut: async (req, res, next) => {
     res.clearCookie('access_token')
     console.log('User LogOut ---')
     res.json({
       status: 'ok',
+      error: null,
       message: 'Sistemden Çıkış Yaptınız',
     })
   },

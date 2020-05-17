@@ -24,7 +24,7 @@ switch (app.get('env')) {
     mongoose.connect(credentials.mongo.development.url, opts)
     break
   case 'production':
-    mongoose.connect(credentials.mongo.production.url, opts)
+    mongoose.connect(credentials.mongo.production.db_makinatr, opts)
     break
   default:
     throw new Error('Unkown execution enviroment: ' + app.get('env'))

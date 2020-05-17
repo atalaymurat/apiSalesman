@@ -6,14 +6,45 @@ const passportConf = require('../passport.js')
 const { validateBody, schemas } = require('../helpers/routeHelpers.js')
 const UsersController = require('../controllers/users')
 
-const passportlogin = passport.authenticate('local', { session: false })
+const passportlogin = (req, res, next) => {
+  passport.authenticate('local', function (err, user, info) {
+    console.log("Buraya Vurdu")
+    if (err) {
+      return next(err)
+    }
+    if (!user) {
+      console.log('LOCAL STRETEGEY RESPOND')
+      res.status(401)
+      res.send({
+        status : "error",
+        error: info.message,
+        message: "Kayıt bulunamadı Üye olamayı deneyin",
+      }
+      )
+      return
+    }
+    
+    const token = signToken(user)
+    res.cookie('access_token', token, {
+      httpOnly: true,
+    })
+    res.status(200).json({
+      status: 'ok',
+      error: null,
+      message: 'Giriş yaptınız',
+    })
+    return next()
+
+  })(req, res, next)
+}
+
 const passportJWT = passport.authenticate('jwt', { session: false })
 
 router.route('/signup').post(validateBody(schemas.authSchema), UsersController.signUp)
 
 router.route('/verify').post(validateBody(schemas.verifySchema), UsersController.verify)
 
-router.route('/login').post(validateBody(schemas.authSchema), passportlogin, UsersController.login)
+router.route('/login').post(validateBody(schemas.authSchema), passportlogin)
 
 router.route('/logout').get(passportJWT, UsersController.logOut)
 
