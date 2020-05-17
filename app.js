@@ -2,10 +2,15 @@ const express = require('express')
 const morgan = require('morgan')
 const credentials = require('./.credentials')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 
 const app = express()
+app.use(cookieParser());
 // Cors middl...
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
 
 // Mongo DB Settings
 const mongoose = require('mongoose')
@@ -44,7 +49,7 @@ app.use(express.json())
 
 // Routes
 app.get('/', (req, res) => {
-  res.send('Salesman Api index')
+  res.status(200).send('salesman api is under construction')
 })
 app.use('/users', require('./routes/users.js'))
 
@@ -57,7 +62,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
   console.error(err.stack)
   res.status(500)
-  res.send('500')
+  res.send('500 internal server error')
 })
 
 // Start the server

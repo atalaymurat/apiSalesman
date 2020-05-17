@@ -41,7 +41,6 @@ passport.use(
 
         done(null, user)
       } catch (error) {
-        console.log("Error Cathed JWT STG")
         done(error, false)
       }
     }

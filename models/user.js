@@ -3,51 +3,86 @@ const bcrypt = require('bcryptjs')
 const Schema = mongoose.Schema
 
 //Create a schema
-const userSchema = new Schema({
-  method: {
-    type: String,
-    //enum: ['local', 'google', 'facebook'],
-    required: true,
+const userSchema = new Schema(
+  {
+    methods: {
+      type: [String],
+      //enum: ['local', 'google', 'facebook'],
+      required: true,
+    },
+
+    admin: {
+      type: Boolean,
+      default: false,
+    },
+    local: {
+      email: {
+        type: String,
+        lowercase: true,
+      },
+      email_verified: {
+        type: Boolean,
+        default: false,
+      },
+      password: {
+        type: String,
+      },
+      confirmStr: String,
+    },
+    google: {
+      id: {
+        type: String,
+      },
+      email: {
+        type: String,
+        lowercase: true,
+      },
+      picture: {
+        type: String,
+      },
+      displayName: {
+        type: String,
+      },
+    },
+    facebook: {
+      id: {
+        type: String,
+      },
+      email: {
+        type: String,
+        lowercase: true,
+      },
+      displayName: {
+        type: String,
+      },
+      picture: String,
+    },
   },
-  local: {
-    email: {
-      type: String,
-      lowercase: true,
+  {
+    timestamps: {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at',
     },
-    password: {
-      type: String,
-    },
-  },
-  google: {
-    id: {
-      type: String,
-    },
-    email: {
-      type: String,
-      lowercase: true,
-    },
-  },
-  facebook: {
-    id: {
-      type: String,
-    },
-    email: {
-      type: String,
-      lowercase: true,
-    },
-  },
-})
+  }
+)
 
 userSchema.pre('save', async function (next) {
+  // Burda biryerde kaydetmeden once sıkıntı var
   try {
-    if (this.method !== 'local') {
+    console.log('entered user schema pre save')
+    if (!this.methods.includes('local')) {
       next()
     }
 
+    const user = this
+    //check if the user modified to know if password already hashed
+    if (!user.isModified('local.password')) {
+      next()
+    }
     // Generate a Salt
-    const salt = await bcrypt.genSalt(10)
+    const salt = await bcrypt.genSaltSync(10)
     // Generate a password hash (salt + hash)
-    const passwordHash = await bcrypt.hash(this.local.password, salt)
+    const passwordHash = await bcrypt.hashSync(this.local.password, salt)
     // Assign hash version to orijinal pass to store in db
     this.local.password = passwordHash
     next()
@@ -59,7 +94,7 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.isValidPassword = async function (newPassword) {
   try {
     //Return compare of passes True or False
-    return await bcrypt.compare(newPassword, this.local.password)
+    return await bcrypt.compareSync(newPassword, this.local.password)
   } catch (error) {
     throw new Error(error)
   }
