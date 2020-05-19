@@ -5,7 +5,7 @@ const randomstring = require('randomstring')
 const mailer = require('../misc/mailer.js')
 const conf = require('../.credentials.js')
 
-signToken = user => {
+signToken = (user) => {
   return JWT.sign(
     {
       iss: 'apiSalesman',
@@ -88,6 +88,29 @@ module.exports = {
     console.log('[CTRL] Sign-UP New User : ', newUser)
 
     //Send the verification email
+    const text = `
+    Merhaba,
+
+    Üye kaydınız için teşekkür ederiz.
+    Lütfen email adresinizin size ait olduğunu onaylamak için aşağıdaki kodu kullanınız.
+
+    Eğer e-postamız gereksiz klasörünüze gelmiş ise lütfen mailimizi gereksiz değil olarak işaretleyiniz. 
+
+    Görüş ve istekleriniz ile ilgili bize e-posta yazabilirsiniz. Sizlerden gelecek bildirimler bizim için büyük önem arzetmektedir.
+
+    ------------------------------------------------------------
+    Kod : ${confirmStr}
+    ------------------------------------------------------------
+
+    Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz. Kontrol panelinizde bilgilerinizi daha detaylı güncelleyebilirsiniz.
+
+    Saygılar.
+
+   web: ${conf.host_url} 
+   mailto:${conf.host_email} 
+   Adres : 
+   PK 34340, Sancaktepe, İstanbul
+   Turkey`
 
     const html = `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -136,7 +159,13 @@ module.exports = {
     res.cookie('access_token', token, { httpOnly: true })
 
     //Sending the Email
-    await mailer.sendEmail(conf.host_email, email, `${conf.host_url} -- Doğrulama Kodu`, html)
+    await mailer.sendEmail(
+      conf.host_email,
+      email,
+      `${conf.host_url} -- Doğrulama Kodu`,
+      html,
+      text
+    )
     console.log('[CTRL-signUp] Email sent for verify to', email)
     res.status(200).json({
       success: true,
@@ -294,7 +323,8 @@ module.exports = {
         email: req.user.local.email,
         admin: req.user.admin,
         picture: req.user.google.picture || req.user.facebook.picture,
-        displayName: req.user.google.displayName || req.user.facebook.displayName,
+        displayName:
+          req.user.google.displayName || req.user.facebook.displayName,
         googleEmail: req.user.google.email,
         fbEmail: req.user.facebook.email,
         email_verified: req.user.local.email_verified,
