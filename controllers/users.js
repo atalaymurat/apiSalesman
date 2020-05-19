@@ -97,37 +97,38 @@ module.exports = {
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    List-Unsubscribe: <mailto: unsubscribe@makinatr.com?subject=unsubscribe>, <http://api.makinatr.com/unsubscribe.html>
+    List-Unsubscribe:<mailto: unsubscribe@makinatr.com?subject=unsubscribe><http://api.makinatr.com/unsubscribe.html>
 	  <title>Doğrulama Kodunuz</title>
     </head>
     <body>
     <p>Merhaba,</p>
     <p>
-    Üye kaydınız için teşekkür ederiz. <br />
+    Üye kaydınız için teşekkür ederiz.<br />
     Lütfen email adresinizin size ait olduğunu onaylamak için aşağıdaki kodu kullanınız.</p>
+    <p>Eğer e-postamız gereksiz klasörünüze gelmiş ise lütfen mailimizi gereksiz değil olarak işaretleyiniz. <p/>
+    <p>Görüş ve istekleriniz ile ilgili bize e-posta yazabilirsiniz. Sizlerden gelecek bildirimler bizim için büyük önem arzetmektedir.</p>
     <br />
     <hr />
     Kod : <b>${confirmStr}</b><br />
     <hr />
     <p>
-    Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz</p> <br />
+    Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz. Kontrol panelinizde bilgilerinizi daha detaylı güncelleyebilirsiniz.</p> <br />
     <p>
     <a href="http://${conf.host_url}/users/verify">Eğer doğrulama ekranını kapattıysanız bu linkten ulaşabilirsiniz</a></p>
     <br />
     Saygılar.<br />
     <br />
     <address>
-    Gönderen :<a href="mailto:${conf.host_email}">${conf.host_url}</a>.<br>
-    Adresimiz :<br>
+    <a href="mailto:${conf.host_email}">${conf.host_url}</a><br>
+    Adres :<br>
     ${conf.host_url} <br />
     PK 34340, Sancaktepe, İstanbul<br>
     Turkey <br />
     </address>
     <br/>
     <br/>
-    List-Unsubscribe: <mailto: unsubscribe@makinatr.com?subject=unsubscribe>, <http://api.makinatr.com/unsubscribe.html>
-      </body>
-      </html>
+    </body>
+    </html>
     `
 
     // Getting the JWT access token
