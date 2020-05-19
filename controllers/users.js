@@ -91,19 +91,31 @@ module.exports = {
 
     const html = `
     Merhaba, <br />
+    <p>
     Üye kaydınız için teşekkür ederiz. <br />
-    Lütfen email adresinizin size ait olduğunu onaylamak için aşağıdaki kodu kullanınız. <br />
+    Lütfen email adresinizin size ait olduğunu onaylamak için aşağıdaki kodu kullanınız.</p>
     <br />
     <hr />
     Kod : <b>${confirmStr}</b><br />
     <hr />
-    Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz <br />
-    <a href="http://makinatr.com/users/verify">Eğer doğrulama ekranını kapattıysanız bu linkten ulaşabilirsiniz</a>
+    <p>
+    Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz</p> <br />
+  <p>
+    <a href="http://makinatr.com/users/verify">Eğer doğrulama ekranını kapattıysanız bu linkten ulaşabilirsiniz</a></p>
     <br />
 
-    Saygılar <br />
+    Saygılar.<br />
+    <br />
+    <address>
+    Gönderen :<a href="mailto:${conf.host_email}">Makinatr</a>.<br>
+    Adresimiz :<br>
     ${conf.host_url} <br />
-    ${conf.host_email}<br />
+    PK 34340, Sancaktepe, İstanbul<br>
+    Turkey <br />
+    </address>
+    <br/>
+    click here for <a href="http://makinatr.com/unsubscribe">Unsubscribe</a><br/>
+    Email almak istemiyorsanız lütfen<a href="http://makinatr.com/unsubscribe">buraya</a> tıklayınız.<br/>
     `
 
     // Getting the JWT access token
@@ -111,7 +123,7 @@ module.exports = {
     res.cookie('access_token', token, { httpOnly: true })
 
     //Sending the Email
-    await mailer.sendEmail(conf.host_email, email, 'Doğrulama Kodu', html)
+    await mailer.sendEmail(conf.host_email, email, 'Makinatr -- Doğrulama Kodu', html)
     console.log('[CTRL-signUp] Email sent for verify to', email)
     res.status(200).json({
       success: true,

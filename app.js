@@ -6,6 +6,26 @@ const cookieParser = require('cookie-parser')
 
 const app = express()
 app.use(cookieParser())
+switch (app.get('env')) {
+  case 'development':
+    app.use(
+      cors({
+        origin: 'http://localhost:3000',
+        credentials: true,
+      })
+    )
+    break
+  case 'production':
+    app.use(
+      cors({
+        origin: 'http://dev.makinatr.com',
+        credentials: true,
+      })
+    )
+    break
+  default:
+    throw new Error('Unkown execution enviroment: ' + app.get('env'))
+}
 
 // Mongo DB Settings
 const mongoose = require('mongoose')
@@ -17,21 +37,9 @@ let opts = {
 switch (app.get('env')) {
   case 'development':
     mongoose.connect(credentials.mongo.development.url, opts)
-    app.use(
-      cors({
-        origin: 'http://localhost:3000',
-        credentials: true,
-      })
-    )
     break
   case 'production':
     mongoose.connect(credentials.mongo.production.db_makinatr, opts)
-    app.use(
-      cors({
-        origin: 'http://dev.makinatr.com',
-        credentials: true,
-      })
-    )
     break
   default:
     throw new Error('Unkown execution enviroment: ' + app.get('env'))
