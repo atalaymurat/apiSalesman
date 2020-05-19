@@ -163,8 +163,7 @@ module.exports = {
       conf.host_email,
       email,
       `${conf.host_url} -- Doğrulama Kodu`,
-      html,
-      text
+      html
     )
     console.log('[CTRL-signUp] Email sent for verify to', email)
     res.status(200).json({
