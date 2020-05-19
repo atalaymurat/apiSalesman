@@ -90,7 +90,18 @@ module.exports = {
     //Send the verification email
 
     const html = `
-    Merhaba, <br />
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    List-Unsubscribe: <mailto: unsubscribe@makinatr.com?subject=unsubscribe>, <http://api.makinatr.com/unsubscribe.html>
+	  <title>Doğrulama Kodunuz</title>
+    </head>
+    <body>
+    <p>Merhaba,</p>
     <p>
     Üye kaydınız için teşekkür ederiz. <br />
     Lütfen email adresinizin size ait olduğunu onaylamak için aşağıdaki kodu kullanınız.</p>
@@ -100,22 +111,23 @@ module.exports = {
     <hr />
     <p>
     Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz</p> <br />
-  <p>
-    <a href="http://makinatr.com/users/verify">Eğer doğrulama ekranını kapattıysanız bu linkten ulaşabilirsiniz</a></p>
+    <p>
+    <a href="http://${conf.host_url}/users/verify">Eğer doğrulama ekranını kapattıysanız bu linkten ulaşabilirsiniz</a></p>
     <br />
-
     Saygılar.<br />
     <br />
     <address>
-    Gönderen :<a href="mailto:${conf.host_email}">Makinatr</a>.<br>
+    Gönderen :<a href="mailto:${conf.host_email}">${conf.host_url}</a>.<br>
     Adresimiz :<br>
     ${conf.host_url} <br />
     PK 34340, Sancaktepe, İstanbul<br>
     Turkey <br />
     </address>
     <br/>
-    click here for <a href="http://makinatr.com/unsubscribe">Unsubscribe</a><br/>
-    Email almak istemiyorsanız lütfen<a href="http://makinatr.com/unsubscribe">buraya</a> tıklayınız.<br/>
+    <br/>
+    List-Unsubscribe: <mailto: unsubscribe@makinatr.com?subject=unsubscribe>, <http://api.makinatr.com/unsubscribe.html>
+      </body>
+      </html>
     `
 
     // Getting the JWT access token
@@ -123,7 +135,7 @@ module.exports = {
     res.cookie('access_token', token, { httpOnly: true })
 
     //Sending the Email
-    await mailer.sendEmail(conf.host_email, email, 'Makinatr -- Doğrulama Kodu', html)
+    await mailer.sendEmail(conf.host_email, email, `${conf.host_url} -- Doğrulama Kodu`, html)
     console.log('[CTRL-signUp] Email sent for verify to', email)
     res.status(200).json({
       success: true,

@@ -66,6 +66,10 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.status(200).send('api is running')
 })
+
+app.get('/unsubscribe.', (req, res) => {
+  res.status(200).send('we recived your unsubscribe request')
+}) 
 app.use('/users', require('./routes/users.js'))
 
 // 404 catch-all handler (middleware)
