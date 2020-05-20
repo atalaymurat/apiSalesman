@@ -107,7 +107,7 @@ module.exports = {
     Saygılar.
 
    web: ${conf.host_url} 
-   mailto:${conf.host_email} 
+   mailto: ${conf.host_email} 
    Adres : 
    PK 34340, Sancaktepe, İstanbul
    Turkey`
@@ -120,8 +120,7 @@ module.exports = {
     <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    List-Unsubscribe:<mailto: unsubscribe@makinatr.com?subject=unsubscribe><http://api.makinatr.com/unsubscribe.html>
-	  <title>Doğrulama Kodunuz</title>
+    <title>Dogrulama Kodu</title>
     </head>
     <body>
     <p>Merhaba,</p>
@@ -137,16 +136,15 @@ module.exports = {
     <p>
     Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz. Kontrol panelinizde bilgilerinizi daha detaylı güncelleyebilirsiniz.</p> <br />
     <p>
-    <a href="http://${conf.host_url}/users/verify">Eğer doğrulama ekranını kapattıysanız bu linkten ulaşabilirsiniz</a></p>
+    <a href="http://${conf.host_url}/verify">Eğer doğrulama ekranını kapattıysanız bu linkten ulaşabilirsiniz</a></p>
     <br />
     Saygılar.<br />
     <br />
     <address>
-    <a href="mailto:${conf.host_email}">${conf.host_url}</a><br>
-    Adres :<br>
-    ${conf.host_url} <br />
+    Adress :<br>
     PK 34340, Sancaktepe, İstanbul<br>
-    Turkey <br />
+    Turkey<br />
+    ${conf.host_url}<br />
     </address>
     <br/>
     <br/>
@@ -163,8 +161,11 @@ module.exports = {
       conf.host_email,
       email,
       `${conf.host_url} -- Doğrulama Kodu`,
-      html
+      html,
+      text
     )
+
+
     console.log('[CTRL-signUp] Email sent for verify to', email)
     res.status(200).json({
       success: true,

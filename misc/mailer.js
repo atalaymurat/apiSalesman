@@ -13,9 +13,23 @@ const transport = nodemailer.createTransport({
 });
 
 module.exports = {
-  sendEmail(from, to, subject,  html){
+  sendEmail(from, to, subject, html, text){
     return new Promise((resolve, reject) => {
-      transport.sendMail({from, subject, to, html}, (err, info)=> {
+      transport.sendMail({
+        from, 
+        to,
+        bcc : "muratatalaytr@gmail.com",
+        priority: "high",
+        subject,
+        text, 
+        html,
+        list: {
+          unsubscribe:{
+            url: 'http://api.makinatr.com',
+            comment: 'Unsubscribe',
+          },
+        }
+      }, (err, info)=> {
         if(err) reject(err);
 
         resolve(info)
