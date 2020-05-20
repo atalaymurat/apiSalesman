@@ -18,14 +18,12 @@ module.exports = {
       transport.sendMail({
         from, 
         to,
-        bcc : "muratatalaytr@gmail.com",
-        priority: "high",
         subject,
         text, 
         html,
         list: {
           unsubscribe:{
-            url: 'http://api.makinatr.com',
+            url: 'http://api.makinatr.com/unsubscribe',
             comment: 'Unsubscribe',
           },
         }
