@@ -70,7 +70,8 @@ app.get('/', (req, res) => {
 app.get('/unsubscribe.', (req, res) => {
   res.status(200).send('we recived your unsubscribe request')
 }) 
-app.use('/users', require('./routes/users.js'))
+app.use('/auth', require('./routes/auth.js'))
+app.use('/user', require('./routes/user.js'))
 
 // 404 catch-all handler (middleware)
 app.use((req, res, next) => {

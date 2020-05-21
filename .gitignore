@@ -2,6 +2,7 @@ node_modules
 log/requests.log
 log/*
 .credentials.js
+api.http
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
