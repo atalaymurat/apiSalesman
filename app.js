@@ -4,7 +4,6 @@ const credentials = require('./.credentials')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const axios = require('axios')
-const conf = require('./.credentials.js')
 
 const app = express()
 app.use(cookieParser())
@@ -74,7 +73,7 @@ app.post('/siteverify', async (req, res) => {
     headers: {"Content-type" : "application/json"},
     url: 'https://www.google.com/recaptcha/api/siteverify',
     params : {
-    "secret" : conf.google.RECAPTCHA_SECRET,
+    "secret" : credentials.google.RECAPTCHA_SECRET,
     "response" : req.body.response
     },
   })
