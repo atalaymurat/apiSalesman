@@ -1,6 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
-const credentials = require('./.credentials')
+const conf = require('./.credentials')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
 const axios = require('axios')
@@ -37,10 +37,10 @@ let opts = {
 }
 switch (app.get('env')) {
   case 'development':
-    mongoose.connect(credentials.mongo.development.url, opts)
+    mongoose.connect(conf.mongo.development.url, opts)
     break
   case 'production':
-    mongoose.connect(credentials.mongo.production.db_makinatr, opts)
+    mongoose.connect(conf.mongo.production.db_makinatr, opts)
     break
   default:
     throw new Error('Unkown execution enviroment: ' + app.get('env'))
@@ -67,19 +67,19 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.status(200).send('api is running')
 })
-//app.post('/siteverify', async (req, res) => {
-  //const gres = await axios({
-    //method: 'post',
-    //headers: {"Content-type" : "application/json"},
-    //url: 'https://www.google.com/recaptcha/api/siteverify',
-    //params : {
-    //"secret" : credentials.google.RECAPTCHA_SECRET,
-    //"response" : req.body.response
-    //},
-  //})
-  //console.log("Google Response : ----------------", gres.data)
-  //res.status(200).json({success: true})
-//} )
+app.post('/siteverify', async (req, res) => {
+  const gres = await axios({
+    method: 'post',
+    headers: {"Content-type" : "application/json"},
+    url: 'https://www.google.com/recaptcha/api/siteverify',
+    params : {
+    "secret" : conf.google.RECAPTCHA_SECRET,
+    "response" : req.body.response
+    },
+  })
+  console.log("Google Response : ----------------", gres.data)
+  res.status(200).json({success: true})
+} )
 
 app.get('/unsubscribe.', (req, res) => {
   res.status(200).send('we recived your unsubscribe request')
