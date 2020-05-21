@@ -78,7 +78,7 @@ app.post('/siteverify', async (req, res) => {
     },
   })
   console.log("Google Response : ----------------", gres.data)
-  res.status(200).json({success: true})
+  res.status(200).json(gres.data)
 } )
 
 app.get('/unsubscribe.', (req, res) => {
