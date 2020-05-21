@@ -3,6 +3,8 @@ const morgan = require('morgan')
 const credentials = require('./.credentials')
 const cors = require('cors')
 const cookieParser = require('cookie-parser')
+const axios = require('axios')
+const conf = require('./.credentials.js')
 
 const app = express()
 app.use(cookieParser())
@@ -66,6 +68,19 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.status(200).send('api is running')
 })
+app.post('/siteverify', async (req, res) => {
+  const gres = await axios({
+    method: 'post',
+    headers: {"Content-type" : "application/json"},
+    url: 'https://www.google.com/recaptcha/api/siteverify',
+    params : {
+    "secret" : conf.google.RECAPTCHA_SECRET,
+    "response" : req.body.response
+    },
+  })
+  console.log("Google Response : ----------------", gres.data)
+  res.status(200).json({success: true})
+} )
 
 app.get('/unsubscribe.', (req, res) => {
   res.status(200).send('we recived your unsubscribe request')
