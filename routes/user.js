@@ -7,4 +7,7 @@ const UsersController = require('../controllers/users')
 router.route('/changepass')
   .post(validateBody(schemas.changeSchema), UsersController.changePass)
 
+router.route('/reverify')
+  .post(UsersController.reVerify)
+
   module.exports = router

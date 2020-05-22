@@ -36,7 +36,6 @@ module.exports = {
       code: Joi.string().max(6).min(6).error(new Error('Kod doğru değil')),
     }),
     changeSchema: Joi.object().keys({
-      username: Joi.string().email().required(),
       currentPassword: Joi.string().required().min(6),
       newPassword: Joi.string().required().min(6),
     }),

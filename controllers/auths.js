@@ -5,7 +5,11 @@ const passport = require('passport')
 const User = require('../models/user.js')
 const conf = require('../.credentials.js')
 const mailer = require('../misc/mailer.js')
-const {confirmHtml, confirmText, confirmStr } = require('../misc/confirmationMail')
+const {
+  confirmHtml,
+  confirmText,
+  confirmStr,
+} = require('../misc/confirmationMail')
 
 signToken = (user) => {
   return JWT.sign(
@@ -69,15 +73,16 @@ module.exports = {
     }
 
     //Start confirmation process
+    const newStr = confirmStr()
 
-    console.log('random string : ', confirmStr)
+    console.log('random string : ', newStr)
     //Create new user
     const newUser = new User({
       methods: ['local'],
       local: {
         email: email,
         password: password,
-        confirmStr: confirmStr,
+        confirmStr: newStr,
         email_verified: false,
       },
     })
@@ -88,14 +93,16 @@ module.exports = {
     // Getting the JWT access token
     const token = signToken(newUser)
     res.cookie('access_token', token, { httpOnly: true })
-
+    //Generating email template with string code
+    const text = confirmText(newStr)
+    const html = confirmHtml(newStr)
     //Sending the ConfirmationMail
     await mailer.sendEmail(
       conf.host_email,
       email,
       `${conf.host_url} -- Doğrulama Kodu`,
-      confirmHtml,
-      confirmText
+      html,
+      text
     )
 
     console.log('[CTRL-signUp] Email sent for verify to', email)
@@ -278,6 +285,4 @@ module.exports = {
   checkAuth: async (req, res, next) => {
     res.json({ success: true })
   },
-
-  
 }

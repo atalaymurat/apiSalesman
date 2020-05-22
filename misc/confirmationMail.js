@@ -1,13 +1,16 @@
 const randomstring = require('randomstring')
 const conf = require('../.credentials.js')
 
-const confirmStr = randomstring.generate({
-  length: 6,
-  charset: 'hex',
-})
+const confirmStr = () => {
+  let str = randomstring.generate({
+    length: 6,
+    charset: 'hex',
+  })
+  return str
+}
 
-
-const html = `
+const confirmHtml = (newStr) => {
+  let mail = `
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -26,7 +29,7 @@ const html = `
     <p>Görüş ve istekleriniz ile ilgili bize e-posta yazabilirsiniz. Sizlerden gelecek bildirimler bizim için büyük önem arzetmektedir.</p>
     <br />
     <hr />
-    Kod : <b>${confirmStr}</b><br />
+    Kod : <b>${newStr}</b><br />
     <hr />
     <p>
     Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz. Kontrol panelinizde bilgilerinizi daha detaylı güncelleyebilirsiniz.</p> <br />
@@ -46,9 +49,12 @@ const html = `
     </body>
     </html>
     `
+  return mail
+}
 
 //Send the verification email
-const text = `
+const confirmText = (newStr) => {
+  let text = `
     Merhaba,
 
     Üye kaydınız için teşekkür ederiz.
@@ -59,7 +65,7 @@ const text = `
     Görüş ve istekleriniz ile ilgili bize e-posta yazabilirsiniz. Sizlerden gelecek bildirimler bizim için büyük önem arzetmektedir.
 
     ------------------------------------------------------------
-    Kod : ${confirmStr}
+    Kod : ${newStr}
     ------------------------------------------------------------
 
     Emailinizi doğruladıktan sonra kontrol panelinize yönlendirileceksiniz. Kontrol panelinizde bilgilerinizi daha detaylı güncelleyebilirsiniz.
@@ -71,5 +77,7 @@ const text = `
    Adres : 
    PK 34340, Sancaktepe, İstanbul
    Turkey`
+   return text
+}
 
-module.exports = {confirmHtml : html, confirmText: text, confirmStr } 
+module.exports = { confirmHtml, confirmText, confirmStr }
