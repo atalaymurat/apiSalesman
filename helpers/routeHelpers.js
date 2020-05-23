@@ -9,7 +9,7 @@ module.exports = {
 
         return res.status(400).json({
           status: 'error',
-          message: '',
+          message: null,
           error: error.message,
         })
       }
@@ -26,18 +26,24 @@ module.exports = {
       email: Joi.string()
         .email()
         .required()
-        .error(new Error('Email geçerli değil')),
+        .error(new Error('E-posta geçersiz')),
       password: Joi.string()
         .required()
         .min(6)
         .error(new Error('Şifre geçersiz')),
     }),
     verifySchema: Joi.object().keys({
-      code: Joi.string().max(6).min(6).error(new Error('Kod doğru değil')),
+      code: Joi.string().max(6).min(6).error(new Error('Kod geçersiz')),
     }),
     changeSchema: Joi.object().keys({
-      currentPassword: Joi.string().required().min(6),
-      newPassword: Joi.string().required().min(6),
+      currentPassword: Joi.string()
+        .required()
+        .min(6)
+        .error(new Error('Şifre geçersiz')),
+      newPassword: Joi.string()
+        .required()
+        .min(6)
+        .error(new Error('Şifre geçersiz')),
     }),
   },
 }

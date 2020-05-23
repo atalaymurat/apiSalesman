@@ -115,52 +115,43 @@ module.exports = {
   },
 
   verify: async (req, res, next) => {
-    try {
-      console.log('[CTRL] verify entered')
-      const { code } = req.value.body
-      //if(code){ code.trim() }
-      console.log('req code : ', code)
+    console.log('[CTRL] verify entered')
+    const { code } = req.value.body
+    //if(code){ code.trim() }
+    console.log('req code : ', code)
 
-      const verifyUser = await User.findOne({ 'local.confirmStr': code })
-      console.log('Found User is :', verifyUser)
+    const verifyUser = await User.findOne({ 'local.confirmStr': code })
+    console.log('Found User is :', verifyUser)
 
-      if (!verifyUser) {
-        console.log('[CTRL-vrfy] There is no user with code !!')
-        return res.status(403).json({
-          status: 'error',
-          email_verified: false,
-          message: 'Yeni bir kod almayı deneyin',
-          error: 'Kod Geçerli Değil',
-        })
-      }
-
-      if (verifyUser) {
-        //Generate token
-        const token = signToken(verifyUser)
-        //Respond with cookie JWT
-        res.cookie('access_token', token, { httpOnly: true })
-        console.log('Access_Token Cookie assagned')
-
-        // Saving Verified User to verified
-        verifyUser.local.email_verified = true
-        verifyUser.local.confirmStr = ''
-        await verifyUser.save()
-        console.log('[CTRL-vrfy] User email verified OK')
-
-        return res.status(200).json({
-          status: 'ok',
-          email_verified: verifyUser.local.email_verified,
-          message: 'Email adresiniz doğrulandı...',
-          error: null,
-        })
-      }
-    } catch (error) {
-      res.status(500).json({
+    if (!verifyUser) {
+      console.log('[CTRL-vrfy] There is no user with code !!')
+      return res.status(403).json({
         status: 'error',
-        error: 'Serverda bir hata oluştu',
-        message: 'verify controller cath error',
+        email_verified: false,
+        message: 'Yeni bir kod almayı deneyin',
+        error: 'Kod Geçerli Değil',
       })
-      next(error)
+    }
+
+    if (verifyUser) {
+      //Generate token
+      const token = signToken(verifyUser)
+      //Respond with cookie JWT
+      res.cookie('access_token', token, { httpOnly: true })
+      console.log('Access_Token Cookie assagned')
+
+      // Saving Verified User to verified
+      verifyUser.local.email_verified = true
+      verifyUser.local.confirmStr = ''
+      await verifyUser.save()
+      console.log('[CTRL-vrfy] User email verified OK')
+
+      return res.status(200).json({
+        status: 'ok',
+        email_verified: verifyUser.local.email_verified,
+        message: 'Email adresiniz doğrulandı...',
+        error: null,
+      })
     }
   },
 

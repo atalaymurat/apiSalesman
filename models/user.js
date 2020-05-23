@@ -28,6 +28,7 @@ const userSchema = new Schema(
         type: String,
       },
       confirmStr: String,
+      resetPassToken: String,
     },
     google: {
       id: {

@@ -10,4 +10,11 @@ router.route('/changepass')
 router.route('/reverify')
   .post(UsersController.reVerify)
 
-  module.exports = router
+router.route('/forget')
+  .post(UsersController.forget)
+
+router.route('/reset')
+  .post(UsersController.reset)
+
+module.exports = router
+
