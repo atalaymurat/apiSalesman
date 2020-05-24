@@ -129,6 +129,12 @@ module.exports = {
     /*  
     //--- Kullanıcı mevcut ----
     */
+    if (!findUser.local.email_verified) {
+      return res.status(404).json({
+        succeess: false,
+        error: 'Email doğrulanmamış.',
+      })
+    }
 
     // Token oluştur [x]
     const resetToken = JWT.sign(
@@ -192,51 +198,45 @@ module.exports = {
     })
   },
 
-  reset: async (req, res, next) => {
-    try{
-    const token = req.body.token
-    const newPassword = req.body.password
-    console.log("token :", token, "Pass :", newPassword)
-    // Check token is verified [ ]
-    let decode = JWT.verify(token, JWT_SECRET)
-    console.log("DECODE :", decode)
-    // Find the user from token [ ]
-    const findUser = await User.findById(decode.sub)
-    if(!findUser){
-      return res.status(404).json({
-        status: "error",
-        error: "geçersiz kullanıcı"
+  reset: async (req, res, next) => {
+    try {
+      const token = req.body.token
+      const newPassword = req.body.password
+      console.log('token :', token, 'Pass :', newPassword)
+      // Check token is verified [ ]
+      let decode = JWT.verify(token, JWT_SECRET)
+      console.log('DECODE :', decode)
+      // Find the user from token [ ]
+      const findUser = await User.findById(decode.sub)
+      if (!findUser) {
+        return res.status(404).json({
+          status: 'error',
+          error: 'Üzgünüz, geçersiz kimlik,',
+        })
+      }
+      // İf user try to change again
+      let match = token === findUser.local.resetPassToken
+      if (!match) {
+        return res.status(403).json({
+          status: 'error',
+          error: 'Anahtar kimlik geçersiz. son belirlenen şifre kullanılabilir.',
+        })
+      }
+      // Password hash and salt [ ]
+      findUser.local.password = newPassword
+      findUser.local.resetPassToken = '1'
+      findUser.save()
+      res.status(200).json({
+        success: true,
+        message: 'Şifre atama başarılı',
       })
-    }
-    let match = token === findUser.local.resetPassToken
-    if(!match){
-      return res.status(403).json({
-        status: "error",
-        error: "anahtarlar eşleşmiyor"
-      })
-    }
-    // Password hash and salt [ ]
-    findUser.local.password = newPassword
-    findUser.local.resetPassToken = '1'
-    findUser.save()
-    res.status(200).json({
-      success: true,
-      message: "Şifre atama başarılı"
-    })
-
-
-
-    }catch(error){
+    } catch (error) {
       res.status(404).json({
-        status: "error",
-        error: "not valid"
+        status: 'error',
+        error: 'Üzgünüz, Hatalı veya eksik bir işlem yapılıyor.'
       })
     }
-
-
 
     // Save Password to user [ ]
-
-
-  }
+  },
 }
