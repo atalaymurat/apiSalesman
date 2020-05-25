@@ -16,5 +16,6 @@ router.route('/forget')
 router.route('/reset')
   .post(UsersController.reset)
 
+router.route('/verify').post(validateBody(schemas.verifySchema), UsersController.verify)
 module.exports = router
 

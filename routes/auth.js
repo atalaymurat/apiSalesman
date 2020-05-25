@@ -11,8 +11,6 @@ const passportJWT = passport.authenticate('jwt', { session: false })
 
 router.route('/signup').post(validateBody(schemas.authSchema), AuthsController.signUp)
 
-router.route('/verify').post(validateBody(schemas.verifySchema), AuthsController.verify)
-
 // Login authenticate local controllerda yapılıyor
 router.route('/login').post(validateBody(schemas.authSchema), AuthsController.login)
 

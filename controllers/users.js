@@ -9,6 +9,18 @@ const {
 const mailer = require('../misc/mailer')
 const conf = require('../.credentials')
 
+signToken = (user) => {
+  return JWT.sign(
+    {
+      iss: 'apiSalesman',
+      sub: user._id,
+      iat: new Date().getTime(),
+      exp: new Date().setDate(new Date().getDate() + 1),
+    },
+    JWT_SECRET
+  )
+}
+
 module.exports = {
   changePass: async (req, res, next) => {
     console.log('change Pass CTRL -- req', req.body)
@@ -80,6 +92,7 @@ module.exports = {
     let timeTo = 60 - Math.floor(timeDiff)
     console.log('Timediff', timeDiff)
     console.log('Time now ', dateNow)
+    // Bu email sıfırlamıssa zaman kıssıtlamasına girmsesine sebeb oluyor
     console.log('Updated at', findUser.updated_at)
     if (timeDiff < 10) {
       console.error('Email zaman kısıtlaması 60 dk')
@@ -114,6 +127,49 @@ module.exports = {
       message: `Tekrar doğrulama kodu ${usermail} adresine gönderildi`,
     })
   },
+
+  verify: async (req, res, next) => {
+    console.log('[CTRL] verify entered')
+    const { code } = req.value.body
+    //if(code){ code.trim() }
+    console.log('req code : ', code)
+
+    const verifyUser = await User.findOne({ 'local.confirmStr': code })
+    console.log('Found User is :', verifyUser)
+
+    if (!verifyUser) {
+      console.log('[CTRL-vrfy] There is no user with code !!')
+      return res.status(403).json({
+        status: 'error',
+        email_verified: false,
+        message: 'Yeni bir kod almayı deneyin',
+        error: 'Kod Geçerli Değil',
+      })
+    }
+
+    if (verifyUser) {
+      //Generate token
+      const token = signToken(verifyUser)
+      //Respond with cookie JWT
+      res.cookie('access_token', token, { httpOnly: true })
+      console.log('Access_Token Cookie assagned')
+
+      // Saving Verified User to verified
+      verifyUser.local.email_verified = true
+      verifyUser.local.confirmStr = ''
+      await verifyUser.save()
+      console.log('[CTRL-vrfy] User email verified OK')
+
+      return res.status(200).json({
+        status: 'ok',
+        email_verified: verifyUser.local.email_verified,
+        message: 'Email adresiniz doğrulandı...',
+        error: null,
+      })
+    }
+  },
+
+  
 
   forget: async (req, res, next) => {
     console.log('FORGET REQ body', req.body)
